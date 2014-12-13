@@ -1,0 +1,15 @@
+{
+    "config": {
+        "vendor-dir": "lib"
+    },
+    "require": {
+        "acassan/php-crawler": "dev-master",
+        "symfony/dom-crawler": "*",
+        "symfony/console": "*",
+        "symfony/yaml": "*",
+        "doctrine/orm": "*"
+    },
+    "autoload": {
+        "psr-0": { "Ahb": "src" }
+    }
+}

@@ -1,0 +1,4 @@
+url_seeder:
+    class: "Ahb\Crawlers\FileUrlSeeder"
+    parameters:
+        file: "urls.txt"
