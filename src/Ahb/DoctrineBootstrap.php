@@ -19,7 +19,8 @@ class DoctrineBootstrap
             "driver"=> "pdo_mysql",
             "user"=> "root",
             "password"=> "root",
-            "dbname"=> "ahbcrawl"
+            "dbname"=> "ahbcrawl",
+            "host"=> "192.168.50.4"
         );
         $paths         = array(__DIR__."/Entities");
         $isDevMode     = true;

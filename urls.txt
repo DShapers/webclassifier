@@ -1,6 +1,7 @@
 {
     "urls": [
         {
+            "source": "techcrunch",
             "url":"http://www.techcrunch.com",
             "filterRules":"/^(?:(?!\\/[0-9]+\\/).)*$\r?\n?/"
         }

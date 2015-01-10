@@ -8,19 +8,19 @@ namespace Ahb\Entities;
 class Document
 {
     /** @Id @Column(type="integer") @GeneratedValue **/
-    protected $id;
+    public $id;
     /** @Column(type="integer") **/
-    protected $crawlerId;
+    public $crawlerId;
     /** @Column(type="string") **/
-    protected $source;
+    public $source;
     /** @Column(type="string") **/
-    protected $url;
+    public $url;
     /** @Column(type="text") **/
-    protected $title;
+    public $title;
     /** @Column(type="text") **/
-    protected $content;
+    public $content;
      /** @Column(type="integer") **/
-    protected $size;
+    public $size;
     /** @Column(type="date") **/
-    protected $crawledDate;
+    public $crawledDate;
 }

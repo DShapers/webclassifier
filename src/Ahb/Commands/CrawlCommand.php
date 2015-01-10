@@ -32,6 +32,7 @@ class CrawlCommand extends Command
                 $output->writeln("<info>Start indexing ".$url['url']."</info>");
                 $output->writeln("<info>******************************************</info>");
                 $crawler = new NewsWebsiteCrawler($input, $output);
+                $crawler->setCrawlInfo(array('source'=>$url['source']));
                 $crawler->setURL($url['url']);
                 $crawler->addContentTypeReceiveRule("#text/html#");
                 $crawler->setPageLimit($pageLimit);
@@ -50,10 +51,10 @@ class CrawlCommand extends Command
         if ($configFile) {
             if (!file_exists($configFile)) {
                 $output->writeln('<warning>'.$configFile.' does not exist, taking default config file ahbcrawl.yml</warning>');
-                $configFile = "./ahbcrawl.yml";
+                $configFile = "./config/ahbcrawl.yml";
             }
         } else {
-            $configFile = "ahbcrawl.yml";
+            $configFile = "./config/ahbcrawl.yml";
         }
         $yaml   = new YamlParser();
         $config = $yaml->parse(@file_get_contents($configFile));
