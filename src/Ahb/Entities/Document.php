@@ -21,6 +21,6 @@ class Document
     public $content;
      /** @Column(type="integer") **/
     public $size;
-    /** @Column(type="date") **/
+    /** @Column(type="datetime") **/
     public $crawledDate;
 }

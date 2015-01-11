@@ -20,7 +20,7 @@ class DoctrineBootstrap
             "user"=> "root",
             "password"=> "root",
             "dbname"=> "ahbcrawl",
-            "host"=> "192.168.50.4"
+            "host"=> "172.28.128.3"
         );
         $paths         = array(__DIR__."/Entities");
         $isDevMode     = true;
