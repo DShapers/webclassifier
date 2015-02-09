@@ -43,14 +43,26 @@ class NewsWebsiteCrawler extends PHPCrawler
         $doc->url         = $pageInfo->url;
         try {
             $doc->title       = $this->domCrawler->filterXPath('//title')->text();
-        } catch (\InvalidArgumentException $e) {
-            $this->output->writeln("<error>Title cannot be extracted, forget article...</error>");
+            $doc->documentHash= $this->buildDocumentHash($doc->url);
+            $doc->crawledDate = time();
+            $doc->size = $pageInfo->bytes_received;
+            $em = \Ahb\DoctrineBootstrap::getEntityManager();
+            $em->persist($doc);
+            $em->flush();
+         } catch (\Exception $e) {
+            $this->output->writeln("<error>Forget article : "+$e->getMessage()+"</error>");
             return;
         }
-        $doc->crawledDate = new \DateTime();
-        $doc->size = $pageInfo->bytes_received;
-        $em = \Ahb\DoctrineBootstrap::getEntityManager();
-        $em->persist($doc);
-        $em->flush();
+    }
+
+    protected function buildDocumentHash($url)
+    {
+        $urlParsed = parse_url($url);
+        if (!$urlParsed) {
+            return null;
+        }
+        $path = isset($urlParsed['path']) ? $urlParsed['path'] : '';
+        $hash = $urlParsed['host']."/".$path;
+        return $hash;
     }
 }
