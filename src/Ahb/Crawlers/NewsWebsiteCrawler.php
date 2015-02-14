@@ -6,12 +6,14 @@ use PHPCrawler\PHPCrawlerDocumentInfo;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
+use Elasticsearch\Client as ESClient;
 
 class NewsWebsiteCrawler extends PHPCrawler
 {
     private $input;
     private $output;
     private $domCrawler;
+    private $esClient;
     private $crawlInfo;
 
     public function __construct(InputInterface $input, OutputInterface $output)
@@ -20,6 +22,9 @@ class NewsWebsiteCrawler extends PHPCrawler
         $this->output     = $output;
         $this->input      = $input;
         $this->domCrawler = new DomCrawler();
+        $this->esClient   = new ESCLient(array(
+            "hosts"=>array("localhost:9200")
+        ));
     }
 
     public function setCrawlInfo($crawlInfo)
@@ -49,8 +54,13 @@ class NewsWebsiteCrawler extends PHPCrawler
             $em = \Ahb\DoctrineBootstrap::getEntityManager();
             $em->persist($doc);
             $em->flush();
+            $this->esClient->index(array(
+                "body"=>json_encode($doc),
+                "index"=>"ahbcrawl",
+                "type"=>"document"
+            ));
          } catch (\Exception $e) {
-            $this->output->writeln("<error>Forget article : "+$e->getMessage()+"</error>");
+            $this->output->writeln("<error>Article already exist or cannot be crawled</error>");
             return;
         }
     }
