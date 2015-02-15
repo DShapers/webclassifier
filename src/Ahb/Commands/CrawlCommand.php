@@ -13,7 +13,7 @@ class CrawlCommand extends Command
 {
     protected function configure()
     {
-        $this->setName("crawl")->setDescription("Crawl all websites defined in seed list");
+        $this->setName("crawler:crawl")->setDescription("Crawl all websites defined in seed list");
         $this->addOption("config", null, InputOption::VALUE_OPTIONAL);
         $this->addOption("pagelimit", null, InputOption::VALUE_OPTIONAL);
         $this->addOption("process", null, InputOption::VALUE_OPTIONAL);
