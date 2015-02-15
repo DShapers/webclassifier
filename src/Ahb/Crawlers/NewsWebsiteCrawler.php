@@ -54,10 +54,12 @@ class NewsWebsiteCrawler extends PHPCrawler
             $em = \Ahb\DoctrineBootstrap::getEntityManager();
             $em->persist($doc);
             $em->flush();
+            unset($doc->id);
             $this->esClient->index(array(
                 "body"=>json_encode($doc),
                 "index"=>"openinov",
-                "type"=>"document"
+                "type"=>"document",
+                "id"=>$doc->documentHash
             ));
          } catch (\Exception $e) {
             $this->output->writeln("<error>Article already exist or cannot be crawled</error>");

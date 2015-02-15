@@ -25,7 +25,7 @@ class CreateEsIndexCommand extends Command
                     'type'=>'nested',
                     'properties'=> array(
                         'id'=>array('type'=>'integer'),
-                        'score'=>array('type'=>'integer'),
+                        'score'=>array('type'=>'float'),
                         'name'=>array('type'=>'string','index'=>'not_analyzed')
                     )
                 )

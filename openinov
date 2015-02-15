@@ -5,8 +5,10 @@ require 'lib/autoload.php';
 use Symfony\Component\Console\Application;
 use Ahb\Commands\CrawlCommand;
 use Ahb\Commands\CreateEsIndexCommand;
+use Ahb\Commands\ClassifyCommand;
 
 $application = new Application();
 $application->add(new CrawlCommand);
 $application->add(new CreateEsIndexCommand);
+$application->add(new ClassifyCommand);
 $application->run();

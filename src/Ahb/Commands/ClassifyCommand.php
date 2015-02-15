@@ -52,7 +52,7 @@ class ClassifyCommand extends Command
         }
         $out->writeln('<info>Entity '.$entity->name.' has been classified in '.$docCount.' documents</info>');
         $entity->updateDate = time();
-        $entity->documentNumber += $docCount;
+        $entity->documentNumber = $docCount;
         $em->persist($entity);
     }
 
