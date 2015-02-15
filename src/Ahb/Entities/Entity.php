@@ -3,7 +3,7 @@
 namespace Ahb\Entities;
 
 /**
- * @Entity @Table(name="entity", indexes={@Index(name="entity_name_idx",columns={"name"})})
+ * @Entity @Table(name="entity",uniqueConstraints={@UniqueConstraint(name="name_idx",columns={"name"})})
 **/
 class Entity
 {

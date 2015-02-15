@@ -50,11 +50,11 @@ class CrawlCommand extends Command
         $configFile = $input->getOption('config');
         if ($configFile) {
             if (!file_exists($configFile)) {
-                $output->writeln('<warning>'.$configFile.' does not exist, taking default config file ahbcrawl.yml</warning>');
-                $configFile = "./config/ahbcrawl.yml";
+                $output->writeln('<warning>'.$configFile.' does not exist, taking default config file openinov.yml</warning>');
+                $configFile = "./config/openinov.yml";
             }
         } else {
-            $configFile = "./config/ahbcrawl.yml";
+            $configFile = "./config/openinov.yml";
         }
         $yaml   = new YamlParser();
         $config = $yaml->parse(@file_get_contents($configFile));
