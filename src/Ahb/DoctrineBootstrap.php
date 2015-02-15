@@ -19,7 +19,7 @@ class DoctrineBootstrap
             "driver"=> "pdo_mysql",
             "user"=> "root",
             "password"=> "root",
-            "dbname"=> "ahbcrawl",
+            "dbname"=> "openinov",
             "host"=> "172.28.128.3"
         );
         $paths         = array(__DIR__."/Entities");
