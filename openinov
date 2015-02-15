@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+require 'lib/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Ahb\Commands\CrawlCommand;
+use Ahb\Commands\CreateEsIndexCommand;
+
+$application = new Application();
+$application->add(new CrawlCommand);
+$application->add(new CreateEsIndexCommand);
+$application->run();
