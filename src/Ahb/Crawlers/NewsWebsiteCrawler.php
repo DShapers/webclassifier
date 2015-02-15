@@ -56,7 +56,7 @@ class NewsWebsiteCrawler extends PHPCrawler
             $em->flush();
             $this->esClient->index(array(
                 "body"=>json_encode($doc),
-                "index"=>"ahbcrawl",
+                "index"=>"openinov",
                 "type"=>"document"
             ));
          } catch (\Exception $e) {
