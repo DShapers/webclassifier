@@ -18,12 +18,12 @@ class ClassifyCommand extends Command
 
     protected function execute(InputInterface $in, OutputInterface $out)
     {
-        $esClient = new \Elasticsearch\Client(array('hosts'=>array('localhost:9200')));
+        $esClient = new \Elasticsearch\Client(array('hosts'=>array('127.0.0.1:9200')));
         $em       = \Ahb\DoctrineBootstrap::getEntityManager();
         $searchP  = array('index'=>'openinov', 'type'=>'document');
         $entities = $em->getRepository('Ahb\Entities\Entity')->findAll();
         foreach ($entities as $entity) {
-            $body            = array('query'=>array('multi_match'=>array('query'=>$entity->keywords,'fields'=>array('url^5','title^4','content'),'operator'=>'and')), 'fields'=>array('id','url','title'));
+            $body            = array('query'=>array('query_string'=>array('query'=>$entity->keywords,'fields'=>array('url^5','title^4','content'),'use_dis_max'=>true, "phrase_slop"=>2)), 'fields'=>array('id','url','title'));
             $searchP['body'] = $body;
             $matchingDocs    = $esClient->search($searchP);
             $this->classify($out, $esClient, $em, $entity, $matchingDocs);
@@ -41,7 +41,8 @@ class ClassifyCommand extends Command
         $searchP   = array('index'=>'openinov','type'=>'document');
         foreach ($docs['hits']['hits'] as $hit) {
             if ($hit['_score']<=$min_score) continue;
-            $searchP['body']['doc'] = array('entities'=>array('id'=>$entity->id,'name'=>$entity->name,'score'=>$hit['_score']));
+            $searchP['body']['doc'] = array('readDate'=>0, 'entities'=>array('id'=>$entity->id,'name'=>$entity->name,'score'=>$hit['_score']));
+            $searchP['body']['doc_as_upsert'] = true;
             $searchP['id'] = $hit['_id'];
             try {
                 $esClient->update($searchP);

@@ -23,7 +23,7 @@ class NewsWebsiteCrawler extends PHPCrawler
         $this->input      = $input;
         $this->domCrawler = new DomCrawler();
         $this->esClient   = new ESCLient(array(
-            "hosts"=>array("localhost:9200")
+            "hosts"=>array("127.0.0.1:9200")
         ));
     }
 
@@ -55,8 +55,8 @@ class NewsWebsiteCrawler extends PHPCrawler
             $em->persist($doc);
             $em->flush();
             unset($doc->id);
-            $this->esClient->index(array(
-                "body"=>json_encode($doc),
+            $this->esClient->update(array(
+                "body"=> '{"doc":'.json_encode($doc).',"doc_as_upsert":true}',
                 "index"=>"openinov",
                 "type"=>"document",
                 "id"=>$doc->documentHash

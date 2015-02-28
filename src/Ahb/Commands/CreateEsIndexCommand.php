@@ -14,14 +14,28 @@ class CreateEsIndexCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $esClient = new \Elasticsearch\Client();
+        $esClient = new \Elasticsearch\Client(array("hosts"=>array("127.0.0.1:9200")));
         $params['index'] = 'openinov';
         $params['body']['settings']['number_of_shards']   = 1;
         $params['body']['settings']['number_of_replicas'] = 1;
         $params['body']['mappings']['document'] = array(
             '_source'=>array('enable'=>true),
             'properties' => array(
-                'entities' => array(
+                'title' => array(
+                    "type"   => "multi_field",
+                    "fields" => array(
+                        "title" => array("type"=>"string", "index"=>"analyzed"),
+                        "untouched" => array("type"=>"string", "index"=>"not_analyzed")
+                    )
+                ),
+                'url' => array(
+                    "type"   => "multi_field",
+                    "fields" => array(
+                        "url" => array("type"=>"string", "index"=>"analyzed"),
+                        "untouched" => array("type"=>"string", "index"=>"not_analyzed")
+                      )
+                 ),
+                 'entities' => array(
                     'type'=>'nested',
                     'properties'=> array(
                         'id'=>array('type'=>'integer'),

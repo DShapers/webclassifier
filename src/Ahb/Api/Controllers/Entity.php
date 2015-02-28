@@ -29,4 +29,79 @@ class Entity
         $em->flush();
         return new JsonResponse("Entity created",201);
     }
+
+    public function whatsNew()
+    {
+        $esClient = new \Elasticsearch\Client(array('hosts'=>array('127.0.0.1:9200')));
+        $searchP  = array('index'=>'openinov', 'type'=>'document');
+        $query    = 
+array (
+  'query' => 
+  array (
+    'term' => 
+    array (
+      'readDate' => 0,
+    ),
+  ),
+  'size' => 0,
+  'aggs' => 
+  array (
+    'entities' => 
+    array (
+      'nested' => 
+      array (
+        'path' => 'entities',
+      ),
+      'aggs' => 
+      array (
+        'entity' => 
+        array (
+          'terms' => 
+          array (
+            'field' => 'entities.name',
+          ),
+          'aggs' => 
+          array (
+            'title_per_entity' => 
+            array (
+              'reverse_nested' => new \StdClass(), 
+              'aggs' => 
+              array (
+                'title' => 
+                array (
+                  'terms' => 
+                  array (
+                    'field' => 'title.untouched',
+                  ),
+                  'aggs' => 
+                  array (
+                    'url' => 
+                    array (
+                      'terms' => 
+                      array (
+                        'field' => 'url.untouched',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+);
+        $searchP['body'] = json_encode($query, true);
+        $results         = $esClient->search($searchP);
+        $return          = array();
+        foreach($results['aggregations']['entities']['entity']['buckets'] as $entity) {
+            $return[$entity['key']] = array();
+            foreach($entity['title_per_entity']['title']['buckets'] as $item) {
+                $return[$entity['key']][] = array('title'=>$item['key'], 'url'=>$item['url']['buckets'][0]['key']);
+            }
+        }
+        return new JsonResponse($return, 200);
+    }
+
 }

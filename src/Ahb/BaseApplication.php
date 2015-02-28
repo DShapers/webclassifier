@@ -27,6 +27,7 @@ class BaseApplication extends SilexApplication
         //-- Get main controller factory and map urls
         $ctrl = $this['controllers_factory'];
         $ctrl->get('/entity', 'entity.controller:get');
+        $ctrl->get('/entity/_whatsnew', 'entity.controller:whatsNew');
         $ctrl->post('/entity', 'entity.controller:post');
         //-- Mount controller factory on /api/v2 prefix
         $this->mount('/api/v2', $ctrl);
