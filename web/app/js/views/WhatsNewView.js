@@ -12,7 +12,7 @@ define([
     initialize: function() {
     	var that = this;
     	$.ajax({
-  			url: "http://172.28.128.3:8080/api/v1/entity/_whatsnew",
+  			url: "/api/v1/entity/_whatsnew",
   			dataType: "json"
 		}).done(function(data) {
 			that.data = data;
@@ -36,5 +36,4 @@ define([
   });
 
   return WhatsNewView;
-  
 });
