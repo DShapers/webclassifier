@@ -30,7 +30,7 @@ class BaseApplication extends SilexApplication
         $ctrl->get('/entity/_whatsnew', 'entity.controller:whatsNew');
         $ctrl->post('/entity', 'entity.controller:post');
         //-- Mount controller factory on /api/v2 prefix
-        $this->mount('/api/v2', $ctrl);
+        $this->mount('/api/v1', $ctrl);
     }
 
 }

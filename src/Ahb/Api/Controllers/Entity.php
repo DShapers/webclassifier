@@ -35,71 +35,33 @@ class Entity
         $esClient = new \Elasticsearch\Client(array('hosts'=>array('127.0.0.1:9200')));
         $searchP  = array('index'=>'openinov', 'type'=>'document');
         $query    = 
-array (
-  'query' => 
-  array (
-    'term' => 
-    array (
-      'readDate' => 0,
-    ),
-  ),
-  'size' => 0,
-  'aggs' => 
-  array (
-    'entities' => 
-    array (
-      'nested' => 
-      array (
-        'path' => 'entities',
-      ),
-      'aggs' => 
-      array (
-        'entity' => 
-        array (
-          'terms' => 
-          array (
-            'field' => 'entities.name',
-          ),
-          'aggs' => 
-          array (
-            'title_per_entity' => 
-            array (
-              'reverse_nested' => new \StdClass(), 
-              'aggs' => 
-              array (
-                'title' => 
-                array (
-                  'terms' => 
                   array (
-                    'field' => 'title.untouched',
-                  ),
-                  'aggs' => 
-                  array (
-                    'url' => 
+                    'query' => 
                     array (
-                      'terms' => 
+                      'term' => 
                       array (
-                        'field' => 'url.untouched',
+                        'readDate' => 0,
                       ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  ),
-);
+                    'size' => 100
+                  );
         $searchP['body'] = json_encode($query, true);
         $results         = $esClient->search($searchP);
         $return          = array();
-        foreach($results['aggregations']['entities']['entity']['buckets'] as $entity) {
-            $return[$entity['key']] = array();
-            foreach($entity['title_per_entity']['title']['buckets'] as $item) {
-                $return[$entity['key']][] = array('title'=>$item['key'], 'url'=>$item['url']['buckets'][0]['key']);
+        foreach($results['hits']['hits'] as $article) {
+            if (!$article['_source']['entities']) {
+                continue;
             }
+            $entity   = $article['_source']['entities']['name'];
+            $entityId = $article['_source']['entities']['id'];
+            $article['_source']['score']       = round($article['_source']['entities']['score'], 2);
+            $article['_source']['crawledDate'] = date("Y-m-d", $article['_source']['crawledDate']);
+            unset($article['_source']['content']);
+            unset($article['_source']['entities']);
+            if (!isset($return[$entity])) {
+                $return[$entity] = array('entityName'=>$entity, 'entityId'=>$entityId, 'articles'=>array());
+            }
+            $return[$entity]['articles'][] = $article['_source'];
         }
         return new JsonResponse($return, 200);
     }

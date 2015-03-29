@@ -1,0 +1,15 @@
+
+<% _.each(entities, function(entity){ %>
+	<h4><%=entity.entityName%></h4>
+	<% _.each(entity.articles, function(article){ %>
+		<ul>
+			<li>
+				<div class="row">
+					<a href="<%=article.url%>"> <%=article.title%></a>
+				</div>
+				<span class="text-muted"><%=article.source%>, <%=article.crawledDate%></span>
+				<span class="label label-success">Score : <%=article.score%></span>
+			</li>
+		</ul>
+	<%});%>	
+<%});%>
